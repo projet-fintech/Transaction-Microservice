@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        maven 'Maven_Auto' // Remplace 'Maven_Auto' par le nom de ton installation Maven
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -17,5 +20,5 @@ pipeline {
                 }
             }
         }
-   }  // Ajout de l'accolade fermante ici
+   }
 }
