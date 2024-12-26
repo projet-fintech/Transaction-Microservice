@@ -12,10 +12,10 @@ pipeline {
         }
         stage('Build') {
             steps {
-                dir('Backend') { // Assure-toi que c'est le bon répertoire
+                dir('Backend') {
                     sh 'mvn clean install -DskipTests=true'
                 }
             }
         }
+   }  // Ajout de l'accolade fermante ici
 }
-
