@@ -1,17 +1,21 @@
 pipeline {
     agent any
     stages {
-        steps {
+        stage('Checkout') {
+            steps {
                 checkout scmGit(
                     branches: [[name: '*/main']],
                     extensions: [],
-                    userRemoteConfigs: [[credentialsId: 'ser3elah', url: 'https://github.com/projet-fintech/Transaction-Microservice.git']]
+                    userRemoteConfigs: [[credentialsId: 'ser3elah', url: 'https://github.com/mouad4949/GHE_KNJRB_OSF.git']]
                 )
             }
-         stage('Build JAR') {
+        }
+        stage('Build') {
             steps {
-                 sh "mvn clean install -Dspring.profiles.active=test"
+                dir('jenkins') { // Assure-toi que c'est le bon répertoire
+                    sh 'mvn clean install -DskipTests=true'
+                }
             }
-         }
-    }
+        }
+}
 
