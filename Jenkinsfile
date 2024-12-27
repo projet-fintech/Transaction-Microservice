@@ -5,14 +5,16 @@ pipeline {
     }
     stages {
         stage('Checkout') {
-            steps {
-                checkout scmGit(
-                    branches: [[name: '*/main']],
-                    extensions: [],
-                    userRemoteConfigs: [[credentialsId: 'ser3elah', url: 'https://github.com/projet-fintech/Transaction-Microservice.git']]
-                )
-            }
-        }
+    steps {
+         sh 'git config --global --unset http.proxy'
+        sh 'git config --global --unset https.proxy'
+        checkout scmGit(
+            branches: [[name: '*/main']],
+            extensions: [],
+            userRemoteConfigs: [[credentialsId: 'ser3elah', url: 'https://github.com/projet-fintech/Transaction-Microservice.git']]
+        )
+    }
+}
         stage('Build') {
             steps {
                 dir('Backend') {
