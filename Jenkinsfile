@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                dir('jenkins') { // Assure-toi que c'est le bon répertoire
+                dir('Backend') { // Assure-toi que c'est le bon répertoire
                     sh 'mvn clean install -DskipTests=true'
                 }
             }
