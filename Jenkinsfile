@@ -1,12 +1,8 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven'
-    }
     stages {
-        stage('Checkout') {
+       stage('Checkout') {
             steps {
-              sh 'git config --global --unset http.proxy'
                 checkout scmGit(
                     branches: [[name: '*/main']],
                     extensions: [],
@@ -16,12 +12,10 @@ pipeline {
         }
         stage('Build') {
             steps {
-             withMaven(maven: 'Maven') {
-                dir('Backend') {
-                  sh 'mvn clean install -DskipTests=true'
+                dir('jenkins') { // Assure-toi que c'est le bon répertoire
+                    sh 'mvn clean install -DskipTests=true'
                 }
-              }
+            }
             }
         }
     }
-}
