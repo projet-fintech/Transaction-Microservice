@@ -16,9 +16,11 @@ pipeline {
         }
         stage('Build') {
             steps {
+             withMaven(maven: 'Maven') {
                 dir('Backend') {
-                    sh 'mvn clean install -DskipTests=true'
+                  sh 'mvn clean install -DskipTests=true'
                 }
+              }
             }
         }
     }
