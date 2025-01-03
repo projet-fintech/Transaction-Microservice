@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -15,15 +16,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Virement extends Operations{
 
-    @ManyToOne
-    private Compte comptecred;
+
+    private UUID comptecred;
+    private UUID compteDeb;
     private Long client_id;
     private Long employe_id;
 
-    public Virement(Long id, Double amount, String description, LocalDateTime date, Compte compte, Compte compte_cre,Long employe_id,Long client_id) {
-        super(id, description, date,amount, compte);  // Appel du constructeur parent Operations
+    public Virement(Long id, Double amount, String description, LocalDateTime date, UUID comptecred,UUID compteDeb,Long employe_id,Long client_id) {
+        super(id, description, date,amount);
         this.employe_id = employe_id;
         this.client_id = client_id;
         this.comptecred = comptecred;
+        this.compteDeb = compteDeb;
     }
 }

@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @AllArgsConstructor
 @RestController
@@ -18,7 +20,7 @@ public class VersementController {
     private final VersementService versementService;
 
     @PostMapping("/add-vers")
-    public void addVersement(@RequestBody VersementDto versementDto) {
+    public void addVersement(@RequestBody VersementDto versementDto) throws ExecutionException, InterruptedException, TimeoutException {
         versementService.saveVersement(versementDto);
     }
 

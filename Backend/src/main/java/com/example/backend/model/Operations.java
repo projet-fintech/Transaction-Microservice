@@ -5,12 +5,10 @@ import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.UUID;
+
 @Builder
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Operations {
     @Id
@@ -20,6 +18,25 @@ public class Operations {
     private LocalDateTime date;
     @Positive
     private Double amount;
-    @ManyToOne
-    private Compte compte;
+
+    private UUID compteId;
+
+    public Operations(Long id, String description, LocalDateTime date, Double amount) {
+        this.id = id;
+        this.description = description;
+        this.date = date;
+        this.amount = amount;
+    }
+
+    public Operations() {
+
+    }
+
+    public Operations(Long id, String description, LocalDateTime date, Double amount, UUID compteId) {
+        this.id = id;
+        this.description = description;
+        this.date = date;
+        this.amount = amount;
+        this.compteId = compteId;
+    }
 }

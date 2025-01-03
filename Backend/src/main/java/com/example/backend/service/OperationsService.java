@@ -34,7 +34,7 @@ public class OperationsService {
                 .description(operation.getDescription())
                 .date(operation.getDate())
                 .amount(operation.getAmount())
-                .compte(operation.getCompte())
+                .compteId(operation.getCompteId())
                 .build();
         operationsRepository.save(operations);
     }

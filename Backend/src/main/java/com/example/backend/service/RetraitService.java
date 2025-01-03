@@ -1,58 +1,53 @@
 package com.example.backend.service;
 
+import com.banque.events.dto.AccountDto;
 import com.example.backend.dto.RetraitDto;
-import com.example.backend.dto.VirementDto;
-import com.example.backend.model.Compte;
-import com.example.backend.model.Factures;
 import com.example.backend.model.Retrait;
-import com.example.backend.repositories.CompteRepository;
 import com.example.backend.repositories.RetraitRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @Service
-public class RetraitService {
+public class RetraitService extends KafkaService {
+
     private final RetraitRepository retraitRepository;
-    private final CompteRepository compteRepository;
-    public RetraitService(RetraitRepository retraitRepository, CompteRepository compteRepository) {
+
+    public RetraitService(RetraitRepository retraitRepository) {
         this.retraitRepository = retraitRepository;
-        this.compteRepository = compteRepository;
     }
     public List<Retrait> getAllRetraits() {
         return retraitRepository.findAll();
     }
 
     @Transactional
-    public void saveRetrait(RetraitDto retraitDto) {
+    public void saveRetrait(RetraitDto retraitDto) throws ExecutionException, InterruptedException, TimeoutException {
         // Récupérer le compte
-        Optional<Compte> compteOptional = compteRepository.findById(retraitDto.getCompte().getId());
+        AccountDto compte = getAccountById(retraitDto.getCompteId());
 
-        if (compteOptional.isEmpty()) {
+        if (compte == null) {
             throw new IllegalArgumentException("Le compte n'existe pas.");
         }
 
-        Compte compte = compteOptional.get();
+
 
         // Vérifier si le compte a suffisamment de fonds
-        if (compte.getSolde() < retraitDto.getAmount()) {
+        if (compte.getBalance() < retraitDto.getAmount()) {
             throw new IllegalArgumentException("Solde insuffisant pour effectuer ce retrait.");
         }
 
         // Débiter le compte (réduire le solde)
-        compte.setSolde(compte.getSolde() - retraitDto.getAmount());
-
-        // Sauvegarder le compte mis à jour
-        compteRepository.save(compte);
+        updateAccountBalanceRetrait(compte,retraitDto.getAmount());
 
         Retrait retrait = new Retrait(
                 retraitDto.getId(),
                 retraitDto.getAmount(),
                 retraitDto.getDescription(),
                 retraitDto.getDate(),
-                retraitDto.getCompte(),
+                retraitDto.getCompteId(),
                 retraitDto.getEmploye_id()
         );
         retraitRepository.save(retrait);

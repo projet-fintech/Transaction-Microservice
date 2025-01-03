@@ -1,55 +1,41 @@
 package com.example.backend.service;
 
+import com.banque.events.dto.AccountDto;
 import com.example.backend.dto.VirementDto;
-import com.example.backend.model.Compte;
 import com.example.backend.model.Virement;
-import com.example.backend.repositories.CompteRepository;
 import com.example.backend.repositories.VirementRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 
 @Service
-public class VirementService {
+public class VirementService extends KafkaService{
+
     private final VirementRepository virementRepository;
-    private final CompteRepository compteRepository;
-    public VirementService(VirementRepository virementRepository,CompteRepository compteRepository) {
+
+    public VirementService(VirementRepository virementRepository) {
         this.virementRepository = virementRepository;
-        this.compteRepository = compteRepository;
     }
     public List<Virement> getAllVirements() {
         return virementRepository.findAll();
     }
 
-    @Transactional
-    public void saveVirement(VirementDto virementDto) {
+    public void saveVirement(VirementDto virementDto) throws ExecutionException, InterruptedException, TimeoutException {
         // Récupérer les deux comptes (source et destination)
-        Optional<Compte> compteCibleOptional = compteRepository.findById(virementDto.getCompte().getId());
-        Optional<Compte> compteSourceOptional = compteRepository.findById(virementDto.getCompte_cre().getId());
+        AccountDto compteCible = getAccountById(virementDto.getCompteId());
+        AccountDto compteSource = getAccountById(virementDto.getCompteCreID());
 
-        if (compteSourceOptional.isEmpty() || compteCibleOptional.isEmpty()) {
+        if (compteSource == null|| compteCible == null) {
             throw new IllegalArgumentException("Les comptes source ou cible n'existent pas.");
         }
 
-        Compte compteSource = compteSourceOptional.get();
-        Compte compteCible = compteCibleOptional.get();
-
         // Vérifier si le compte source a suffisamment de fonds pour effectuer le virement
-        if (compteSource.getSolde() < virementDto.getAmount()) {
+        if (compteSource.getBalance() < virementDto.getAmount()) {
             throw new IllegalArgumentException("Le solde du compte source est insuffisant.");
         }
-
-        // Débiter le compte source
-        compteSource.setSolde(compteSource.getSolde() - virementDto.getAmount());
-
-        // Créditer le compte cible
-        compteCible.setSolde(compteCible.getSolde() + virementDto.getAmount());
-
-        // Sauvegarder les comptes mis à jour
-        compteRepository.save(compteSource);
-        compteRepository.save(compteCible);
 
         // Créer une nouvelle opération de virement
         Virement virement = new Virement(
@@ -57,16 +43,20 @@ public class VirementService {
                 virementDto.getAmount(),
                 virementDto.getDescription(),
                 virementDto.getDate(),
-                compteCible,
-                compteSource,
+                compteCible.getId_account(),
+                compteSource.getId_account(),
                 virementDto.getClient_id(),
                 virementDto.getEmploye_id()
         );
         // Sauvegarder l'opération de virement
         virementRepository.save(virement);
+        // Envoyer une demande de mise à jour du solde
+        updateAccountBalance(compteSource,compteCible,virementDto.getAmount());
     }
 
     public void deleteVirement(Long id) {
         virementRepository.deleteById(id);
     }
+
+
 }

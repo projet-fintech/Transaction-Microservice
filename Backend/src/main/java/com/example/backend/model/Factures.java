@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -22,8 +23,8 @@ public class Factures extends Operations{
     private String reference;
     private Long clientId;
     private Stat status;
-    public Factures(Long id, Double amount, String description, LocalDateTime date, Compte compte, TypeFacture type, String reference, Long clientId, Stat status) {
-        super(id, description, date,amount, compte);  // Appel du constructeur parent Operations
+    public Factures(Long id, Double amount, String description, LocalDateTime date, UUID compteId, TypeFacture type, String reference, Long clientId, Stat status) {
+        super(id, description, date,amount, compteId);  // Appel du constructeur parent Operations
         this.type = type;
         this.reference = reference;
         this.clientId = clientId;
