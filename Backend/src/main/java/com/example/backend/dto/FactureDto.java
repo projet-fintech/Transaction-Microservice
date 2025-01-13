@@ -1,7 +1,6 @@
 package com.example.backend.dto;
 
 
-import com.example.backend.model.TypeFacture;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,8 +19,6 @@ public class FactureDto {
     private LocalDateTime date;
     private Double amount;
     private UUID compteID;
-    private TypeFacture type;
+    private Integer billerId;
     private String reference;
-    private Long clientId;
-
 }

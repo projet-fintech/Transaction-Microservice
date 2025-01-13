@@ -17,17 +17,15 @@ import java.util.UUID;
 
 public class Factures extends Operations{
 
-    @ManyToOne
-    private TypeFacture type;
+    private Integer predefinedBillerId;
     @Column(nullable = false)
     private String reference;
-    private Long clientId;
     private Stat status;
-    public Factures(Long id, Double amount, String description, LocalDateTime date, UUID compteId, TypeFacture type, String reference, Long clientId, Stat status) {
+
+    public Factures(Long id, Double amount, String description, LocalDateTime date, UUID compteId, Integer predefinedBillerId, String reference, Stat status) {
         super(id, description, date,amount, compteId);  // Appel du constructeur parent Operations
-        this.type = type;
+        this.predefinedBillerId = predefinedBillerId;
         this.reference = reference;
-        this.clientId = clientId;
         this.status = status;
     }
 }
