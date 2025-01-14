@@ -45,11 +45,7 @@ public class KafkaService {
         }
     }
 
-    public void updateAccountBalance(AccountDto compteSource, AccountDto cmpteCible, double amount){
-        // Décrémenter le compte source et incrémenter le compte cible
-        compteSource.setBalance(compteSource.getBalance()-amount);
-        cmpteCible.setBalance(cmpteCible.getBalance()+amount);
-
+    public void updateAccountBalance(AccountDto compteSource, AccountDto cmpteCible){
         // Envoyer les comptes mis à jour au microservice des comptes
         kafkaTemplate.send(accountUpdateTopic,compteSource);
         kafkaTemplate.send(accountUpdateTopic,cmpteCible);

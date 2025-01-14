@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 
 import com.banque.events.dto.AccountDto;
+import com.example.backend.config.TransactionFeeConfig;
 import com.example.backend.dto.FactureDto;
 import com.example.backend.model.Factures;
 import com.example.backend.model.PredefinedBiller;
@@ -20,11 +21,15 @@ public class FacturesService extends KafkaService{
 
     private final FacturesRepository facturesRepository;
     private final PredefinedBillerRepository predefinedBillerRepository;
+    private final TransactionFeeConfig transactionFeeConfig;
+    private final WalletService walletService;
 
 
-    public FacturesService(FacturesRepository facturesRepository, PredefinedBillerRepository predefinedBillerRepository) {
+    public FacturesService(FacturesRepository facturesRepository, PredefinedBillerRepository predefinedBillerRepository, TransactionFeeConfig transactionFeeConfig, WalletService walletService) {
         this.facturesRepository = facturesRepository;
         this.predefinedBillerRepository = predefinedBillerRepository;
+        this.transactionFeeConfig = transactionFeeConfig;
+        this.walletService = walletService;
     }
 
     public List<Factures> getAllFactures() {
@@ -53,12 +58,21 @@ public class FacturesService extends KafkaService{
         if (compte == null) {
             throw new IllegalArgumentException("le compte n'existe pas.");
         }
+
+       // calculer les frais basés sur le type de compte et l'opération
+        String accountType = String.valueOf(compte.getAccountType());
+        double feePercentage = transactionFeeConfig.getFeePercentage(accountType,"facturation");
+        double transactionFee = factureDto.getAmount() * (feePercentage/100);
+        double totalDeduction = factureDto.getAmount() + transactionFee;
+
         // verification si le compte a suffisamment de fonds
-        if (compte.getBalance() < factureDto.getAmount()) {
+        if (compte.getBalance() < totalDeduction) {
             throw new IllegalArgumentException("Solde insuffisant pour effectuer ce paiement de facture.");
         }
         // debiter le compte et mettre à jour la facture
-        updateAccountBalanceRetrait(compte,factureDto.getAmount());
+        updateAccountBalanceRetrait(compte,totalDeduction);
+        // Créditer le wallet du bank
+        walletService.creditWallet(transactionFee);
         PredefinedBiller biller = getPredefinedBillerById(factureDto.getBillerId());
         Factures facture = new Factures(
                 factureDto.getId(),

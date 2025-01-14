@@ -28,4 +28,9 @@ public class WalletService {
         wallet.setBalance(amount);
         bankWalletRepository.save(wallet);
     }
+    public void creditWallet(double amount) {
+        BankWallet wallet = getBankWallet();
+        wallet.setBalance(wallet.getBalance() + amount);
+        bankWalletRepository.save(wallet);
+    }
 }
