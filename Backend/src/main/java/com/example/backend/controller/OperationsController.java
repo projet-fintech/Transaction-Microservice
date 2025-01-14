@@ -4,23 +4,27 @@ package com.example.backend.controller;
 import com.example.backend.dto.OperationDto;
 import com.example.backend.model.Operations;
 import com.example.backend.service.OperationsService;
-import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-@AllArgsConstructor
+
 @RestController
 @RequestMapping("/api/Operation")
 public class OperationsController {
+
     private final OperationsService operationsService;
+
+    public OperationsController(OperationsService operationsService) {
+        this.operationsService = operationsService;
+    }
 
     @PostMapping("/add-oper")
     public void addOperation(@RequestBody OperationDto operationDto) {
         operationsService.saveOperation(operationDto);
     }
-
 
 
     @GetMapping("/get-all-operations")
@@ -38,6 +42,11 @@ public class OperationsController {
     @DeleteMapping("/{operatId}")
     public void deletOperation(@PathVariable Long factId) {
         operationsService.deleteOperation(factId);
+    }
+
+    @GetMapping("/operationsClient/{id}")
+    public List<Operations> getOperationByIDClient(@PathVariable UUID id){
+        return operationsService.getOperationByIdClient(id);
     }
 
 
