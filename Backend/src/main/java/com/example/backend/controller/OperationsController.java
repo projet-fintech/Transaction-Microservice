@@ -4,6 +4,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.OperationDto;
 import com.example.backend.model.Operations;
 import com.example.backend.service.OperationsService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,6 +49,16 @@ public class OperationsController {
     public List<Operations> getOperationByIDClient(@PathVariable UUID id){
         return operationsService.getOperationByIdClient(id);
     }
+
+    @GetMapping("/operations/{compteId}")
+    public ResponseEntity<List<Operations>> getOperationsByCompteId(@PathVariable UUID compteId) {
+        List<Operations> operations = operationsService.getOperationsByCompteId(compteId);
+        if (operations.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(operations);
+    }
+
 
 
 }

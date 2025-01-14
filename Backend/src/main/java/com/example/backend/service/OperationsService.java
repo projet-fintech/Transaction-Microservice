@@ -72,4 +72,8 @@ public class OperationsService {
         return operationsRepository.findAllByCompteIdIn(accountIds);
     }
 
+    public List<Operations> getOperationsByCompteId(UUID compteId) {
+        return operationsRepository.findByCompteId(compteId);
+    }
+
 }

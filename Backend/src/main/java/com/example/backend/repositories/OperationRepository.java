@@ -10,4 +10,6 @@ public interface OperationRepository extends JpaRepository<Operations, Long> {
     // Fetch operations for a list of account IDs
     List<Operations> findAllByCompteIdIn(List<UUID> compteIds);
 
+    List<Operations> findByCompteId(UUID compteId);
+
 }
