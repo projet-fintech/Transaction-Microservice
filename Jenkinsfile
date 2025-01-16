@@ -5,7 +5,7 @@ pipeline {
          jdk 'JAVA21'
     }
     stages {
-       stage('Checkout') {
+       stage('Checkoutt') {
             steps {
                 checkout scmGit(
                     branches: [[name: '*/main']],
