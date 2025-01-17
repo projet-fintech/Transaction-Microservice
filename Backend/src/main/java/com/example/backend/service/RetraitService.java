@@ -55,10 +55,11 @@ public class RetraitService extends KafkaService {
 
         Retrait retrait = new Retrait(
                 retraitDto.getId(),
-                retraitDto.getAmount(),
+                -retraitDto.getAmount(),
                 retraitDto.getDescription(),
                 retraitDto.getDate(),
                 retraitDto.getCompteId(),
+                "RETRAIT",
                 retraitDto.getEmploye_id()
         );
         retraitRepository.save(retrait);

@@ -76,10 +76,11 @@ public class FacturesService extends KafkaService{
         PredefinedBiller biller = getPredefinedBillerById(factureDto.getBillerId());
         Factures facture = new Factures(
                 factureDto.getId(),
-                factureDto.getAmount(),
+                -factureDto.getAmount(),
                 factureDto.getDescription(),
                 LocalDateTime.now(),
                 factureDto.getCompteID(),
+                "Facture",
                 biller != null ? biller.getBiller_id() : 0,
                 factureDto.getReference(),
                 Stat.PAYE

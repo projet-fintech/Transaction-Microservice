@@ -22,8 +22,8 @@ public class Virement extends Operations{
     private Long employe_id;
 
 
-    public Virement(Long id, Double amount, String description, LocalDateTime date, UUID compteId,UUID compteDeb,UUID comptecred,Long employe_id,Long client_id) {
-        super(id, description, date,amount,compteId);
+    public Virement(Long id, Double amount, String description, LocalDateTime date, UUID compteId,String type,UUID compteDeb,UUID comptecred,Long employe_id,Long client_id) {
+        super(id, description, date,amount,compteId,type);
         this.employe_id = employe_id;
         this.client_id = client_id;
         this.compteDeb = compteDeb;

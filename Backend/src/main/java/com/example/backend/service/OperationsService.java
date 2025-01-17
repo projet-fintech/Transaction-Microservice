@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.banque.events.dto.AccountDto;
 import com.example.backend.dto.OperationDto;
+import com.example.backend.dto.OperationResponseDto;
 import com.example.backend.model.Operations;
 import com.example.backend.repositories.OperationRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,8 +73,15 @@ public class OperationsService {
         return operationsRepository.findAllByCompteIdIn(accountIds);
     }
 
-    public List<Operations> getOperationsByCompteId(UUID compteId) {
-        return operationsRepository.findByCompteId(compteId);
+    public List<OperationResponseDto> findOperationsByCompteId(UUID compteId) {
+        return operationsRepository.findAllOperationsByCompteIdDTO(compteId);
     }
+
+
+    public List<OperationResponseDto> getAllOperationsDTO(){
+        return operationsRepository.findAllOperationsDTO();
+    }
+
+
 
 }

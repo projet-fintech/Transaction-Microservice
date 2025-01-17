@@ -41,7 +41,7 @@ public class KafkaService {
             ConsumerRecord<String, AccountDto> response = sendAndRecieve.get(30, TimeUnit.SECONDS);
             return response.value();
         }catch (TimeoutException e) {
-            throw new RuntimeException("Timeout waiting for account service respnse",e);
+            throw new RuntimeException("Timeout waiting for account service response",e);
         }
     }
 

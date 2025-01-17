@@ -56,6 +56,7 @@ public class VersementService extends KafkaService{
                 versementDto.getDescription(),
                 versementDto.getDate(),
                 versementDto.getCompteId(),
+                "VERSEMENT",
                 versementDto.getEmploye_id()
         );
         versementRepository.save(versement);

@@ -17,8 +17,8 @@ public class Versement extends Operations{
 
     private Long employe_id;
 
-    public Versement(Long id, Double amount, String description, LocalDateTime date, UUID compte, Long employe_id) {
-        super(id, description, date,amount, compte);  // Appel du constructeur parent Operations
+    public Versement(Long id, Double amount, String description, LocalDateTime date, UUID compte,String type ,Long employe_id) {
+        super(id, description, date,amount, compte,type);  // Appel du constructeur parent Operations
         this.employe_id = employe_id;
     }
 

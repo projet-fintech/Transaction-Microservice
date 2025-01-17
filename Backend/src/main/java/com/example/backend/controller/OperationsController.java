@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 
 import com.example.backend.dto.OperationDto;
+import com.example.backend.dto.OperationResponseDto;
 import com.example.backend.model.Operations;
 import com.example.backend.service.OperationsService;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +29,6 @@ public class OperationsController {
     }
 
 
-    @GetMapping("/get-all-operations")
-    public List<Operations> getAllOperations() {
-        return operationsService.getAllOperations();
-    }
-
-
     //    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("ConsulterOperation/{OperatId}")
     public Optional<Operations> getOperationById(@PathVariable Long clientId) {
@@ -45,20 +40,23 @@ public class OperationsController {
         operationsService.deleteOperation(factId);
     }
 
-    @GetMapping("/operationsClient/{id}")
-    public List<Operations> getOperationByIDClient(@PathVariable UUID id){
-        return operationsService.getOperationByIdClient(id);
-    }
+
+    // For front End
 
     @GetMapping("/operations/{compteId}")
-    public ResponseEntity<List<Operations>> getOperationsByCompteId(@PathVariable UUID compteId) {
-        List<Operations> operations = operationsService.getOperationsByCompteId(compteId);
+    public ResponseEntity<List<OperationResponseDto>> getOperationsByCompteId(@PathVariable UUID compteId) {
+        List<OperationResponseDto> operations = operationsService.findOperationsByCompteId(compteId);
         if (operations.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(operations);
     }
 
+
+    @GetMapping("/operations-dto")
+    public List<OperationResponseDto> getAllOperationsDTO(){
+        return operationsService.getAllOperationsDTO();
+    }
 
 
 }

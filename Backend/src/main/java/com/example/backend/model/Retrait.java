@@ -16,8 +16,8 @@ import java.util.UUID;
 
 public class Retrait extends Operations {
     private Long employe_id;
-    public Retrait(Long id, Double amount, String description, LocalDateTime date, UUID compteId, Long employe_id) {
-        super(id, description, date,amount, compteId);  // Appel du constructeur parent Operations
+    public Retrait(Long id, Double amount, String description, LocalDateTime date, UUID compteId,String type ,Long employe_id) {
+        super(id, description, date,amount, compteId,type);  // Appel du constructeur parent Operations
         this.employe_id = employe_id;
     }
 }
