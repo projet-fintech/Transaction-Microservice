@@ -17,6 +17,7 @@ import java.util.concurrent.TimeoutException;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/Factures")
+@CrossOrigin(origins = "*")
 public class FacturesController {
 
     private final FacturesService facturesService;

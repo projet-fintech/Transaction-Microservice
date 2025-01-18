@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/Retrait")
+@CrossOrigin(origins = "*")
 public class RetraitController {
 
     private final RetraitService retraitService;

@@ -17,6 +17,7 @@ import java.util.concurrent.TimeoutException;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/Virement")
+@CrossOrigin(origins = "*")
 public class VirementController {
     private final VirementService virementService;
 
