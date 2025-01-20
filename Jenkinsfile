@@ -31,7 +31,7 @@ pipeline {
                     }
                 }
 
-              /*  stage('Unit Tests') {
+               stage('Unit Tests') {
                     steps {
                         script {
 
@@ -40,7 +40,7 @@ pipeline {
                           mvn test'''
                         }
                     }
-                }*/
+                }
 
                   stage('Build Docker Image') {
                     steps {
@@ -95,19 +95,19 @@ pipeline {
                         }
                     }
                 }
-                /*stage('Deploy to EKS') {
+                stage('Deploy to EKS') {
                     steps {
                         script {
                             withCredentials([aws(credentialsId: 'aws-credentials')]) {
                                 sh """
-                                    aws eks --region ${AWS_REGION} update-kubeconfig --name your-eks-cluster-name
-                                    kubectl apply -f kubernetes/deployment.yaml
-                                    kubectl apply -f kubernetes/service.yaml
+                                    aws eks --region ${AWS_REGION} update-kubeconfig --name main-eks-cluster
+                                    kubectl apply -f kubernetes/transaction-deployement.yaml
+                                    kubectl apply -f kubernetes/transacation-service.yaml
                                 """
                             }
                         }
                     }
-                }*/
+                }
             }
             post {
                 failure {
